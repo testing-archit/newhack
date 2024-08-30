@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coal India Profile</title>
+    <link rel="stylesheet" href="page2.css">
+</head>
+<body>
+    <div id="root"></div>
+    <div class="container">
+        <div class="sidebar">
+            <img src="logo.jpeg" alt="Coal India Logo" class="logo">
+            <br><br><br><br><br><br><br><br><br><br>
+            <div class="footer">
+                <p>UPDATES</p>
+                <br>
+                <p>Attendance</p>
+                <br><br>
+                <p>Holidays</p>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="profile-summary">
+                <h2 id="name">Name</h2>
+                <p id="site">Site of Work</p>
+                <p id="year">Joining Year</p>
+            </div>
+            
+            <div class="main-content">
+                <div class="profile-info">
+                    <div class="profile-pic"></div>
+                    <div class="details">
+                        <h2 id="profile-name">Name</h2>
+                        <p><strong>Worker Status:</strong> <span id="status" class="active">Active</span></p>
+                        <p><strong>Enroll ID:</strong> <span id="enrollId">Enroll ID</span></p>
+                        <p><strong>Department:</strong> <span id="position">Position</span></p>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <a href="newlay.html"
+                    button class="shift-handover">Shift Handover</button>
+                    <a href="new.html"
+                    button class="safety-management">Safety Management</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+        apiKey: "AIzaSyBZbkbWTlYtScXenDL9n-CgYSNluFtRf9E",
+        authDomain: "dataadd-8cf4f.firebaseapp.com",
+        databaseURL: "https://dataadd-8cf4f-default-rtdb.firebaseio.com",
+        projectId: "dataadd-8cf4f",
+        storageBucket: "dataadd-8cf4f.appspot.com",
+        messagingSenderId: "163416489588",
+        appId: "1:163416489588:web:d786217186f5e6ebe01b21",
+        measurementId: "G-W8YZ1PKF5X"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const dbRef = firebase.database().ref();
+
+        // Function to get URL parameters
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                  results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        const name = getParameterByName('name');
+
+        // Fetch data based on identifier
+        if (name) {
+            dbRef.child("dataform").orderByChild("name").equalTo(name).once("value", snapshot => {
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnapshot => {
+                        const data = childSnapshot.val();
+                        document.getElementById('name').innerText = data.name;
+                        document.getElementById('profile-name').innerText = data.name;
+                        document.getElementById('enrollId').innerText = data.enrollId;
+                        document.getElementById('position').innerText = data.position;
+                        document.getElementById('site').innerText = data.site;
+                        document.getElementById('status').innerText = data.status;
+                    });
+                } else {
+                    alert('No records found.');
+                }
+            });
+        } else {
+            alert('No identifier provided.');
+        }
+    </script>
+</body>
+</html>
